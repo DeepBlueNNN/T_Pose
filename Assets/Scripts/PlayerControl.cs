@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     public float amount = 0f;
+    public float dec_power = 0.1f;
     public float speed = 300f;
     public float jumpPower = 4f;
 
@@ -55,15 +56,6 @@ public class PlayerControl : MonoBehaviour
         //transform.Rotate(_vRotateSpeed, 0f, _hRotateSpeed);
         //transform.rotation = Quaternion.Euler(new Vector3(_vRotateSpeed, 0, _hRotateSpeed));
 
-        if (amount > 0.1f)
-        {
-            //amount -= 0.1f;
-
-            if (amount < 0.1f && amount > 0f)
-            {
-                amount = 0f;
-            }
-        }
     }
 
     void FixedUpdate()
@@ -71,6 +63,16 @@ public class PlayerControl : MonoBehaviour
         float _rotateAmount = amount * Time.deltaTime;
 
         rb.AddTorque(transform.up * _rotateAmount, ForceMode.Force);
+
+        if (amount > 0.1f)
+        {
+            amount -= dec_power;
+
+            if (amount < 0.1f && amount > 0f)
+            {
+                amount = 0f;
+            }
+        }
 
         rb.AddForce(_hRotateSpeed, 0.0f, _vRotateSpeed, ForceMode.Acceleration);
 
