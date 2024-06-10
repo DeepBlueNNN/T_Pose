@@ -12,6 +12,7 @@ public class PlayerControl : MonoBehaviour
     public float _hRotateSpeed;
     public float _vRotateSpeed;
 
+    public GameObject playerPivot;
     public GameObject playerModel;
     public GameObject cameraRoot;
 
@@ -20,13 +21,15 @@ public class PlayerControl : MonoBehaviour
     void Start()
     {
         //rb = GetComponent<Rigidbody>();
-        //rb = GetComponentInChildren<Rigidbody>();
+        //rb = playerModel.GetComponentInChildren<Rigidbody>();
         rb = playerModel.GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        cameraRoot.transform.position = playerModel.transform.position;
+        playerPivot.transform.position = new Vector3(playerModel.transform.position.x, playerModel.transform.position.y - 1.8f, playerModel.transform.position.z);
+        //cameraRoot.transform.position = playerPivot.transform.position;
+        //cameraRoot.transform.position = playerModel.transform.position;
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -40,10 +43,10 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            amount += 10f;
-        }
+        //if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
+        //{
+        //    amount += 10f;
+        //}
 
         _hRotateSpeed = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
         _vRotateSpeed = Input.GetAxis("Vertical") * speed * Time.deltaTime;
@@ -60,19 +63,21 @@ public class PlayerControl : MonoBehaviour
 
     void FixedUpdate()
     {
+        //cameraRoot.transform.position = playerPivot.transform.position;
+
         float _rotateAmount = amount * Time.deltaTime;
 
         rb.AddTorque(transform.up * _rotateAmount, ForceMode.Force);
 
-        if (amount > 0.1f)
-        {
-            amount -= dec_power;
+        //if (amount > 0.1f)
+        //{
+        //    amount -= dec_power;
 
-            if (amount < 0.1f && amount > 0f)
-            {
-                amount = 0f;
-            }
-        }
+        //    if (amount < 0.1f && amount > 0f)
+        //    {
+        //        amount = 0f;
+        //    }
+        //}
 
         rb.AddForce(_hRotateSpeed, 0.0f, _vRotateSpeed, ForceMode.Acceleration);
 
