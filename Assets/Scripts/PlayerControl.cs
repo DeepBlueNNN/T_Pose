@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class PlayerControl : MonoBehaviour
     private float speed = 300f;     // 이동 속도 변수
     [SerializeField]
     private float jumpPower = 4f;   // 점프에 가하는 힘 변수
+    private bool isJumping = false;
 
     [SerializeField]
     private float _hMoveSpeed;      // 좌,우 이동 속도 값
@@ -55,7 +57,8 @@ public class PlayerControl : MonoBehaviour
         // player 점프
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+            rb.velocity = Vector3.zero;
+            rb.AddForce(playerPivot.transform.up * jumpPower, ForceMode.Impulse);
         }
 
     }
