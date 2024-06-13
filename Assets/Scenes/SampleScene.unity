@@ -944,7 +944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   amount: 80
-  speed: 350
+  speed: 500
   jumpPower: 4
   _hRotateSpeed: 0
   _vRotateSpeed: 0

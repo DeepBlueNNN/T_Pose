@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
-    public float amount = 0f;
-    public float speed = 300f;
-    public float jumpPower = 4f;
+    [SerializeField]
+    private float amount = 0f;      // 회전 관련 변수
 
-    public float _hRotateSpeed;
-    public float _vRotateSpeed;
+    [SerializeField]
+    private float speed = 300f;     // 이동 속도 변수
+    [SerializeField]
+    private float jumpPower = 4f;   // 점프에 가하는 힘 변수
+
+    [SerializeField]
+    private float _hMoveSpeed;      // 좌,우 이동 속도 값
+    [SerializeField]    
+    private float _vMoveSpeed;      // 앞,뒤 이동 속도 값
 
     public GameObject playerPivot;
     public GameObject playerModel;
@@ -18,17 +24,17 @@ public class PlayerControl : MonoBehaviour
 
     void Start()
     {
-        //rb = GetComponent<Rigidbody>();
-        //rb = playerModel.GetComponentInChildren<Rigidbody>();
         rb = playerModel.GetComponent<Rigidbody>();
     }
 
     void Update()
     {
+        // player pivot의 위치를 player model의 위치와 일치시킴
         playerPivot.transform.position = 
             new Vector3(playerModel.transform.position.x, playerModel.transform.position.y - 1.8f, playerModel.transform.position.z);
 
 
+        // t-pose 팽이 사출
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (rb.useGravity)
@@ -41,11 +47,12 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
+        // 키보드 조작에 따라 horizontal, vertical 방향의 move speed 결정
+        _hMoveSpeed = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        _vMoveSpeed = Input.GetAxis("Vertical") * speed * Time.deltaTime;
 
-        _hRotateSpeed = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-        _vRotateSpeed = Input.GetAxis("Vertical") * speed * Time.deltaTime;
 
-
+        // player 점프
         if (Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
@@ -55,15 +62,16 @@ public class PlayerControl : MonoBehaviour
 
     void FixedUpdate()
     {
+        // amount 값에 따라 player model을 지정한 방향으로 회전
         float _rotateAmount = amount * Time.deltaTime;
-        rb.AddTorque(transform.up * _rotateAmount, ForceMode.Force);
+        rb.AddTorque(playerPivot.transform.up * _rotateAmount, ForceMode.Force);
+        //rb.AddTorque(transform.up * _rotateAmount, ForceMode.Force);
+        //rb.AddRelativeTorque(Vector3.up * _rotateAmount, ForceMode.Force);
 
 
-        rb.AddForce(_hRotateSpeed, 0.0f, _vRotateSpeed, ForceMode.Acceleration);
-
-       
-        //Debug.Log(Input.GetAxis("Horizontal"));
-        //Debug.Log(Input.GetAxis("Vertical"));
+        //rb.AddForce(_hRotateSpeed, 0.0f, _vRotateSpeed, ForceMode.Acceleration);
+        rb.AddForce(_hMoveSpeed * playerPivot.transform.right, ForceMode.Acceleration);     // player 가로축 이동 (좌, 우)
+        rb.AddForce(_vMoveSpeed * playerPivot.transform.forward, ForceMode.Acceleration);   // player 세로축 이동 (앞, 뒤)
     }
 
 }
